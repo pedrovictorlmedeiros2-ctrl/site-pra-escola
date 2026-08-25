@@ -1,0 +1,586 @@
+/* ==========================================================
+   CARTEIRO AMIGO - ESTILOS GERAIS
+   Cores principais: azul escuro, azul, branco, cinza claro e verde
+   ========================================================== */
+
+:root {
+  --azul-escuro: #16225c;
+  --azul: #2f6fed;
+  --azul-claro: #e4edfc;
+  --branco: #ffffff;
+  --cinza-claro: #f3f4f7;
+  --cinza-medio: #8a94a6;
+  --cinza-borda: #e3e5ea;
+  --verde: #22c55e;
+  --verde-claro: #e3f9ec;
+  --amarelo: #f59e0b;
+  --amarelo-claro: #fef3e0;
+  --vermelho: #ef4444;
+  --sombra: 0 8px 20px rgba(22, 34, 92, 0.08);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", Roboto, Arial, sans-serif;
+  background: var(--cinza-claro);
+  color: var(--azul-escuro);
+}
+
+/* ==========================================================
+   CONTAINER GERAL - simula a tela de um aplicativo de celular
+   ========================================================== */
+
+.app-container {
+  max-width: 480px;
+  margin: 0 auto;
+  min-height: 100vh;
+  background: var(--branco);
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--sombra);
+  position: relative;
+}
+
+/* Em telas grandes, deixa o "app" com cara de cartão centralizado */
+@media (min-width: 600px) {
+  body {
+    padding: 24px 0;
+  }
+  .app-container {
+    min-height: calc(100vh - 48px);
+    border-radius: 24px;
+    overflow: hidden;
+  }
+}
+
+/* ==========================================================
+   CABEÇALHO
+   ========================================================== */
+
+.app-header {
+  background: var(--azul-escuro);
+  color: var(--branco);
+  padding: 20px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.logo-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.app-icon {
+  width: 48px;
+  height: 48px;
+  min-width: 48px;
+  background: var(--branco);
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+}
+
+.app-header h1 {
+  margin: 0;
+  font-size: 1.25rem;
+  letter-spacing: 0.5px;
+}
+
+.subtitle {
+  margin: 2px 0 0;
+  font-size: 0.78rem;
+  color: #c3cdf2;
+}
+
+.bell-btn {
+  position: relative;
+  background: rgba(255, 255, 255, 0.12);
+  border: none;
+  color: var(--branco);
+  font-size: 1.1rem;
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  background: var(--vermelho);
+  color: var(--branco);
+  font-size: 0.65rem;
+  font-weight: bold;
+  min-width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+}
+
+.badge.escondido {
+  display: none;
+}
+
+/* ==========================================================
+   CONTEÚDO PRINCIPAL / TELAS
+   ========================================================== */
+
+#main-content {
+  flex: 1;
+  padding: 20px;
+  padding-bottom: 100px; /* espaço para a barra inferior não cobrir o conteúdo */
+}
+
+.section {
+  display: none;
+  animation: aparecer 0.2s ease-in;
+}
+
+.section.active {
+  display: block;
+}
+
+@keyframes aparecer {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+h2 {
+  color: var(--azul-escuro);
+  font-size: 1.15rem;
+  margin: 0 0 14px;
+}
+
+h3 {
+  color: var(--azul-escuro);
+  font-size: 1rem;
+  margin: 24px 0 8px;
+}
+
+/* ==========================================================
+   TELA INÍCIO
+   ========================================================== */
+
+.saudacao {
+  font-size: 1.3rem;
+  font-weight: bold;
+  margin: 0 0 4px;
+}
+
+.bemvindo {
+  color: var(--cinza-medio);
+  margin: 0 0 18px;
+}
+
+.resumo-card {
+  background: var(--verde-claro);
+  border: 1px solid #bdf0d1;
+  color: #146c3a;
+  padding: 14px 16px;
+  border-radius: 16px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.resumo-card.sem-encomendas {
+  background: var(--cinza-claro);
+  border-color: var(--cinza-borda);
+  color: var(--cinza-medio);
+}
+
+.home-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.home-card {
+  border: none;
+  border-radius: 18px;
+  padding: 18px;
+  text-align: left;
+  display: grid;
+  grid-template-columns: 40px 1fr;
+  column-gap: 12px;
+  row-gap: 2px;
+  cursor: pointer;
+  box-shadow: var(--sombra);
+  font-family: inherit;
+}
+
+.home-card-icone {
+  font-size: 1.6rem;
+  grid-row: span 2;
+}
+
+.home-card-titulo {
+  font-weight: 700;
+  font-size: 1.02rem;
+}
+
+.home-card-desc {
+  font-size: 0.82rem;
+  opacity: 0.85;
+}
+
+.home-card.cor-azul {
+  background: var(--azul-escuro);
+  color: var(--branco);
+}
+
+.home-card.cor-clara {
+  background: var(--azul-claro);
+  color: var(--azul-escuro);
+}
+
+.home-card.cor-verde {
+  background: var(--verde-claro);
+  color: #146c3a;
+}
+
+/* ==========================================================
+   TELA ENCOMENDAS - abas de filtro
+   ========================================================== */
+
+.tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.tab-btn {
+  flex: 1;
+  padding: 8px 4px;
+  border-radius: 10px;
+  border: 1px solid var(--cinza-borda);
+  background: var(--branco);
+  color: var(--cinza-medio);
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.tab-btn.active {
+  background: var(--azul);
+  border-color: var(--azul);
+  color: var(--branco);
+  font-weight: 600;
+}
+
+.lista-encomendas,
+.lista-notificacoes {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* Cartão de cada encomenda */
+.encomenda-card {
+  background: var(--branco);
+  border: 1px solid var(--cinza-borda);
+  border-left: 5px solid var(--cinza-medio);
+  border-radius: 16px;
+  padding: 14px 16px;
+  box-shadow: var(--sombra);
+}
+
+.encomenda-card.status-disponivel {
+  border-left-color: var(--verde);
+}
+
+.encomenda-card.status-aguardando {
+  border-left-color: var(--amarelo);
+}
+
+.encomenda-card.status-retirada {
+  border-left-color: var(--cinza-medio);
+  opacity: 0.85;
+}
+
+.encomenda-topo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.encomenda-titulo {
+  font-weight: 700;
+}
+
+.status-tag {
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.status-tag.status-disponivel {
+  background: var(--verde-claro);
+  color: #146c3a;
+}
+
+.status-tag.status-aguardando {
+  background: var(--amarelo-claro);
+  color: #92610a;
+}
+
+.status-tag.status-retirada {
+  background: var(--cinza-claro);
+  color: var(--cinza-medio);
+}
+
+.encomenda-info {
+  font-size: 0.85rem;
+  color: var(--cinza-medio);
+  margin: 2px 0;
+}
+
+.btn-detalhes {
+  margin-top: 10px;
+  background: none;
+  border: none;
+  color: var(--azul);
+  font-weight: 700;
+  cursor: pointer;
+  padding: 0;
+  font-size: 0.88rem;
+}
+
+.vazio {
+  text-align: center;
+  color: var(--cinza-medio);
+  padding: 30px 10px;
+}
+
+/* ==========================================================
+   TELA DETALHES
+   ========================================================== */
+
+.btn-voltar {
+  background: none;
+  border: none;
+  color: var(--azul);
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  padding: 0;
+  margin-bottom: 16px;
+}
+
+.detalhe-caixa {
+  background: var(--branco);
+  border: 1px solid var(--cinza-borda);
+  border-radius: 18px;
+  padding: 20px;
+  box-shadow: var(--sombra);
+}
+
+.detalhe-icone-grande {
+  text-align: center;
+  font-size: 3rem;
+  margin-bottom: 6px;
+}
+
+.detalhe-status-texto {
+  text-align: center;
+  font-weight: 700;
+  font-size: 1.05rem;
+  margin-bottom: 18px;
+}
+
+.detalhe-linha {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--cinza-borda);
+  font-size: 0.9rem;
+}
+
+.detalhe-linha:last-of-type {
+  border-bottom: none;
+}
+
+.detalhe-linha span:first-child {
+  color: var(--cinza-medio);
+}
+
+.detalhe-linha span:last-child {
+  font-weight: 600;
+  text-align: right;
+}
+
+.aviso-documento {
+  background: var(--azul-claro);
+  color: var(--azul-escuro);
+  border-radius: 12px;
+  padding: 12px 14px;
+  font-size: 0.85rem;
+  margin-top: 16px;
+}
+
+.btn-primario {
+  width: 100%;
+  background: var(--azul);
+  color: var(--branco);
+  border: none;
+  border-radius: 14px;
+  padding: 14px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 16px;
+}
+
+.btn-primario.verde {
+  background: var(--verde);
+}
+
+.btn-primario:disabled {
+  background: var(--cinza-medio);
+  cursor: default;
+}
+
+/* ==========================================================
+   TELA NOTIFICAÇÕES
+   ========================================================== */
+
+.notificacao-card {
+  background: var(--azul-claro);
+  border-radius: 16px;
+  padding: 14px 16px;
+  font-size: 0.88rem;
+  box-shadow: var(--sombra);
+}
+
+.notificacao-titulo {
+  font-weight: 700;
+  margin-bottom: 4px;
+  color: var(--azul-escuro);
+}
+
+.notificacao-info {
+  color: var(--azul-escuro);
+  opacity: 0.8;
+  margin: 2px 0;
+}
+
+/* ==========================================================
+   TELA CONTA / FALE CONOSCO
+   ========================================================== */
+
+.conta-perfil {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--cinza-claro);
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 8px;
+}
+
+.conta-avatar {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  background: var(--azul-claro);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+}
+
+.conta-nome {
+  margin: 0;
+  font-weight: 700;
+}
+
+.conta-info {
+  margin: 2px 0 0;
+  color: var(--cinza-medio);
+  font-size: 0.85rem;
+}
+
+.fale-conosco-texto {
+  color: var(--cinza-medio);
+  font-size: 0.88rem;
+  margin: 0 0 10px;
+}
+
+#mensagem-texto {
+  width: 100%;
+  border: 1px solid var(--cinza-borda);
+  border-radius: 14px;
+  padding: 12px;
+  font-family: inherit;
+  font-size: 0.92rem;
+  resize: vertical;
+}
+
+.msg-sucesso {
+  background: var(--verde-claro);
+  color: #146c3a;
+  border-radius: 12px;
+  padding: 12px 14px;
+  margin-top: 14px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.escondido {
+  display: none !important;
+}
+
+/* ==========================================================
+   BARRA DE NAVEGAÇÃO INFERIOR
+   ========================================================== */
+
+.bottom-nav {
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  background: var(--branco);
+  border-top: 1px solid var(--cinza-borda);
+  padding: 8px 4px;
+}
+
+.nav-btn {
+  flex: 1;
+  background: none;
+  border: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 6px 0;
+  color: var(--cinza-medio);
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.nav-icone {
+  font-size: 1.25rem;
+}
+
+.nav-texto {
+  font-size: 0.68rem;
+  font-weight: 600;
+}
+
+.nav-btn.active {
+  color: var(--azul);
+}

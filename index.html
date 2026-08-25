@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Carteiro Amigo</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📬</text></svg>" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <div class="app-container">
+
+    <!-- Cabeçalho com o nome do site -->
+    <header class="app-header">
+      <div class="logo-row">
+        <div class="app-icon">📬</div>
+        <div>
+          <h1>Carteiro Amigo</h1>
+          <p class="subtitle">Suas encomendas, sempre organizadas.</p>
+        </div>
+      </div>
+      <button class="bell-btn" id="btn-bell-home" title="Notificações">
+        🔔
+        <span class="badge" id="badge-notif">0</span>
+      </button>
+    </header>
+
+    <!-- Conteúdo principal: cada <section> é uma "tela" do app -->
+    <main id="main-content">
+
+      <!-- TELA 1: INÍCIO -->
+      <section id="section-inicio" class="section active">
+        <p class="saudacao">Olá, Maria! 👋</p>
+        <p class="bemvindo">Bem-vinda ao <strong>Carteiro Amigo</strong></p>
+
+        <div class="resumo-card" id="resumo-disponivel"></div>
+
+        <div class="home-cards">
+          <button class="home-card cor-azul" data-target="encomendas">
+            <span class="home-card-icone">📦</span>
+            <span class="home-card-titulo">Minhas Encomendas</span>
+            <span class="home-card-desc">Veja suas encomendas</span>
+          </button>
+
+          <button class="home-card cor-clara" data-target="notificacoes">
+            <span class="home-card-icone">🔔</span>
+            <span class="home-card-titulo">Notificações</span>
+            <span class="home-card-desc">Avisos e atualizações</span>
+          </button>
+
+          <button class="home-card cor-verde" data-target="conta">
+            <span class="home-card-icone">💬</span>
+            <span class="home-card-titulo">Fale Conosco</span>
+            <span class="home-card-desc">Tire dúvidas ou envie mensagens</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- TELA 2: LISTA DE ENCOMENDAS -->
+      <section id="section-encomendas" class="section">
+        <h2>Minhas Encomendas</h2>
+
+        <div class="tabs">
+          <button class="tab-btn active" data-filtro="todas">Todas</button>
+          <button class="tab-btn" data-filtro="disponivel">Disponíveis</button>
+          <button class="tab-btn" data-filtro="retirada">Retiradas</button>
+        </div>
+
+        <div id="lista-encomendas" class="lista-encomendas"></div>
+      </section>
+
+      <!-- TELA 3: DETALHES DE UMA ENCOMENDA -->
+      <section id="section-detalhes" class="section">
+        <button class="btn-voltar" id="btn-voltar-detalhes">← Voltar</button>
+        <div id="detalhe-conteudo"></div>
+      </section>
+
+      <!-- TELA 4: NOTIFICAÇÕES -->
+      <section id="section-notificacoes" class="section">
+        <h2>Notificações</h2>
+        <div id="lista-notificacoes" class="lista-notificacoes"></div>
+      </section>
+
+      <!-- TELA 5: CONTA / FALE CONOSCO -->
+      <section id="section-conta" class="section">
+        <h2>Minha Conta</h2>
+
+        <div class="conta-perfil">
+          <div class="conta-avatar">👩</div>
+          <div>
+            <p class="conta-nome">Maria Silva</p>
+            <p class="conta-info">Apto 42 - Bloco B</p>
+          </div>
+        </div>
+
+        <h3>💬 Fale Conosco</h3>
+        <p class="fale-conosco-texto">
+          Envie uma mensagem para o responsável pela portaria/condomínio.
+        </p>
+
+        <textarea id="mensagem-texto" rows="5" placeholder="Escreva sua mensagem aqui..."></textarea>
+        <button id="btn-enviar-mensagem" class="btn-primario">Enviar mensagem</button>
+
+        <p id="msg-sucesso" class="msg-sucesso escondido">✅ Mensagem enviada com sucesso!</p>
+      </section>
+
+    </main>
+
+    <!-- Barra de navegação inferior, estilo aplicativo -->
+    <nav class="bottom-nav">
+      <button class="nav-btn active" data-target="inicio">
+        <span class="nav-icone">🏠</span>
+        <span class="nav-texto">Início</span>
+      </button>
+      <button class="nav-btn" data-target="encomendas">
+        <span class="nav-icone">📦</span>
+        <span class="nav-texto">Encomendas</span>
+      </button>
+      <button class="nav-btn" data-target="notificacoes">
+        <span class="nav-icone">🔔</span>
+        <span class="nav-texto">Notificações</span>
+      </button>
+      <button class="nav-btn" data-target="conta">
+        <span class="nav-icone">👤</span>
+        <span class="nav-texto">Conta</span>
+      </button>
+    </nav>
+
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
