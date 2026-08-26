@@ -1,8 +1,79 @@
+
+
 /* ==========================================================
    CARTEIRO AMIGO - SCRIPT PRINCIPAL
    Todo o "banco de dados" fica aqui mesmo, em uma lista (array)
    de objetos JavaScript. Não usamos backend nem banco de dados.
    ========================================================== */
+
+/* ==========================================================
+   LOGIN — guarda só o nome da pessoa, no localStorage do
+   navegador, para lembrar quem está usando o app
+   ========================================================== */
+
+const CHAVE_NOME = "carteiroAmigoNome";
+
+function entrarNoApp(nome) {
+  document.getElementById("nome-usuario").textContent = nome;
+  document.getElementById("conta-nome").textContent = nome;
+
+  document.getElementById("section-login").classList.add("escondido");
+  document.getElementById("app-shell").classList.add("ativo");
+
+  iniciar();
+}
+
+document.getElementById("btn-entrar").addEventListener("click", function () {
+  const campoNome = document.getElementById("input-nome");
+  const erro = document.getElementById("login-erro");
+  const nome = campoNome.value.trim();
+
+  if (nome === "") {
+    erro.classList.remove("escondido");
+    campoNome.focus();
+    return;
+  }
+
+  erro.classList.add("escondido");
+  localStorage.setItem(CHAVE_NOME, nome);
+  entrarNoApp(nome);
+});
+
+// Permite apertar Enter no campo de nome para entrar
+document.getElementById("input-nome").addEventListener("keydown", function (evento) {
+  if (evento.key === "Enter") {
+    document.getElementById("btn-entrar").click();
+  }
+});
+
+// Botão "Trocar nome" na tela de Conta: limpa o nome salvo e volta ao login
+document.getElementById("btn-trocar-nome").addEventListener("click", function () {
+  localStorage.removeItem(CHAVE_NOME);
+  document.getElementById("app-shell").classList.remove("ativo");
+  document.getElementById("section-login").classList.remove("escondido");
+  document.getElementById("input-nome").value = "";
+  document.getElementById("input-nome").focus();
+});
+
+/* ==========================================================
+   MODO ESCURO — também fica salvo no localStorage
+   ========================================================== */
+
+const CHAVE_TEMA = "carteiroAmigoTema";
+
+function aplicarTema(tema) {
+  document.body.classList.toggle("tema-escuro", tema === "escuro");
+  document.getElementById("btn-tema").textContent = tema === "escuro" ? "☀️" : "🌙";
+}
+
+document.getElementById("btn-tema").addEventListener("click", function () {
+  const temaAtual = document.body.classList.contains("tema-escuro") ? "escuro" : "claro";
+  const novoTema = temaAtual === "escuro" ? "claro" : "escuro";
+  localStorage.setItem(CHAVE_TEMA, novoTema);
+  aplicarTema(novoTema);
+});
+
+aplicarTema(localStorage.getItem(CHAVE_TEMA) || "claro");
 
 // Lista de encomendas fictícias.
 // status pode ser: "aguardando", "disponivel" ou "retirada"
@@ -385,6 +456,9 @@ function iniciar() {
   mostrarTela("inicio");
 }
 
-iniciar();
-
-
+// Se já existe um nome salvo de uma visita anterior, pula direto para o app.
+// Caso contrário, a tela de login (que já começa visível no HTML) permanece.
+const nomeSalvo = localStorage.getItem(CHAVE_NOME);
+if (nomeSalvo) {
+  entrarNoApp(nomeSalvo);
+}
