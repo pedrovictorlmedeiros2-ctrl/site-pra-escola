@@ -2,7 +2,7 @@
    CARTEIRO AMIGO - ESTILOS GERAIS
    Identidade visual: "selo postal" — papel creme, azul-marinho
    de carteiro, vermelho de carimbo e cartões com borda picotada
-   como um selo de verdade.
+   como um selo de verdade. Tem também um modo escuro.
    ========================================================== */
 
 :root {
@@ -22,6 +22,26 @@
   --raio: 18px;
 }
 
+/* ==========================================================
+   MODO ESCURO — mesma identidade, com o papel "à noite"
+   ========================================================== */
+
+body.tema-escuro {
+  --azul-marinho: #f2efe6;
+  --azul-carteiro: #6f93ef;
+  --azul-claro: #232c56;
+  --creme: #0f1530;
+  --branco: #1b2347;
+  --cinza-medio: #9aa1c2;
+  --cinza-borda: #323b6b;
+  --verde: #47c184;
+  --verde-claro: #1c3a2c;
+  --amarelo: #e0a545;
+  --amarelo-claro: #3a2f18;
+  --vermelho-selo: #e0685f;
+  --sombra: 0 10px 24px rgba(0, 0, 0, 0.35);
+}
+
 * {
   box-sizing: border-box;
 }
@@ -31,6 +51,7 @@ body {
   font-family: "Inter", "Segoe UI", Roboto, Arial, sans-serif;
   background: var(--creme);
   color: var(--azul-marinho);
+  transition: background 0.2s ease, color 0.2s ease;
 }
 
 h1, h2, h3 {
@@ -64,12 +85,147 @@ h1, h2, h3 {
 }
 
 /* ==========================================================
+   BOTÃO DE MODO ESCURO — flutuante, sempre acessível
+   ========================================================== */
+
+.theme-toggle {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 20;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid var(--cinza-borda);
+  background: var(--branco);
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--sombra);
+}
+
+/* Quando o app já carregou (com header escuro), o botão some para dentro do fluxo do header */
+#app-shell.ativo ~ .theme-toggle,
+#app-shell.ativo .theme-toggle {
+  top: 16px;
+}
+
+/* ==========================================================
+   TELA DE LOGIN
+   ========================================================== */
+
+.login-screen {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 40px 28px;
+  background: var(--azul-marinho);
+  color: var(--creme);
+  min-height: 100vh;
+}
+
+body.tema-escuro .login-screen {
+  background: var(--branco);
+}
+
+@media (min-width: 600px) {
+  .login-screen {
+    min-height: calc(100vh - 56px);
+  }
+}
+
+.login-selo {
+  width: 68px;
+  height: 68px;
+  line-height: 68px;
+  font-size: 2rem;
+  background: var(--creme);
+  border-radius: 50%;
+  border: 2px dashed rgba(22, 32, 74, 0.25);
+  margin-bottom: 16px;
+}
+
+.login-titulo {
+  margin: 0 0 4px;
+  font-size: 1.7rem;
+  font-weight: 600;
+}
+
+.login-subtitulo {
+  margin: 0 0 32px;
+  font-size: 0.86rem;
+  color: #b9c3ec;
+}
+
+.login-cartao {
+  width: 100%;
+  max-width: 320px;
+  background: var(--creme);
+  color: var(--azul-marinho);
+  border-radius: var(--raio);
+  padding: 22px 20px;
+  text-align: left;
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.25);
+}
+
+body.tema-escuro .login-cartao {
+  background: var(--branco);
+}
+
+.login-label {
+  display: block;
+  font-size: 0.82rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: var(--cinza-medio);
+}
+
+.login-input {
+  width: 100%;
+  border: 1px solid var(--cinza-borda);
+  border-radius: 12px;
+  padding: 12px 14px;
+  font-family: inherit;
+  font-size: 0.95rem;
+  background: var(--branco);
+  color: var(--azul-marinho);
+}
+
+.login-input:focus {
+  outline: 2px solid var(--azul-carteiro);
+  outline-offset: 1px;
+}
+
+.login-erro {
+  color: var(--vermelho-selo);
+  font-size: 0.8rem;
+  margin: 8px 0 0;
+}
+
+/* ==========================================================
+   APP PRINCIPAL — escondido até o login
+   ========================================================== */
+
+#app-shell {
+  display: none;
+}
+
+#app-shell.ativo {
+  display: contents;
+}
+
+/* ==========================================================
    CABEÇALHO — recorte de aba de envelope na base
    ========================================================== */
 
 .app-header {
   background: var(--azul-marinho);
-  color: var(--branco);
+  color: var(--creme);
   padding: 22px 20px 30px;
   display: flex;
   align-items: center;
@@ -77,6 +233,10 @@ h1, h2, h3 {
   gap: 12px;
   position: relative;
   clip-path: polygon(0 0, 100% 0, 100% 82%, 50% 100%, 0 82%);
+}
+
+body.tema-escuro .app-header {
+  background: var(--branco);
 }
 
 .logo-row {
@@ -112,11 +272,15 @@ h1, h2, h3 {
   font-weight: 500;
 }
 
+body.tema-escuro .subtitle {
+  color: var(--cinza-medio);
+}
+
 .bell-btn {
   position: relative;
   background: rgba(255, 255, 255, 0.12);
   border: none;
-  color: var(--branco);
+  color: inherit;
   font-size: 1.05rem;
   width: 40px;
   height: 40px;
@@ -145,6 +309,10 @@ h1, h2, h3 {
   justify-content: center;
   padding: 0 4px;
   border: 2px solid var(--azul-marinho);
+}
+
+body.tema-escuro .badge {
+  border-color: var(--branco);
 }
 
 .badge.escondido {
@@ -217,6 +385,11 @@ h3 {
   margin-bottom: 22px;
 }
 
+body.tema-escuro .resumo-card {
+  border-color: #2b5940;
+  color: #7fe0ac;
+}
+
 .resumo-card.sem-encomendas {
   background: var(--branco);
   border-color: var(--cinza-borda);
@@ -270,7 +443,7 @@ h3 {
 
 .home-card.cor-azul {
   background: var(--azul-marinho);
-  color: var(--branco);
+  color: var(--creme);
 }
 
 .home-card.cor-clara {
@@ -281,6 +454,10 @@ h3 {
 .home-card.cor-verde {
   background: var(--verde-claro);
   color: #1c6b41;
+}
+
+body.tema-escuro .home-card.cor-verde {
+  color: #7fe0ac;
 }
 
 /* ==========================================================
@@ -376,9 +553,17 @@ h3 {
   color: #1c6b41;
 }
 
+body.tema-escuro .status-tag.status-disponivel {
+  color: #7fe0ac;
+}
+
 .status-tag.status-aguardando {
   background: var(--amarelo-claro);
   color: #8a5814;
+}
+
+body.tema-escuro .status-tag.status-aguardando {
+  color: #f2c581;
 }
 
 .status-tag.status-retirada {
@@ -517,6 +702,20 @@ h3 {
   cursor: default;
 }
 
+.btn-secundario {
+  width: 100%;
+  background: none;
+  color: var(--azul-carteiro);
+  border: 1px solid var(--cinza-borda);
+  border-radius: 14px;
+  padding: 11px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 10px;
+  font-family: inherit;
+}
+
 /* ==========================================================
    TELA NOTIFICAÇÕES
    ========================================================== */
@@ -595,6 +794,7 @@ h3 {
   font-size: 0.92rem;
   resize: vertical;
   background: var(--branco);
+  color: var(--azul-marinho);
 }
 
 #mensagem-texto:focus {
@@ -610,6 +810,10 @@ h3 {
   margin-top: 14px;
   font-weight: 600;
   text-align: center;
+}
+
+body.tema-escuro .msg-sucesso {
+  color: #7fe0ac;
 }
 
 .escondido {
@@ -664,3 +868,4 @@ h3 {
     transition-duration: 0.001ms !important;
   }
 }
+
