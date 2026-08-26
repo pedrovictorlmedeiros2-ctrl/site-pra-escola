@@ -14,125 +14,150 @@
 
   <div class="app-container">
 
-    <!-- Cabeçalho com o nome do site -->
-    <header class="app-header">
-      <div class="logo-row">
-        <div class="app-icon">📬</div>
-        <div>
-          <h1>Carteiro Amigo</h1>
-          <p class="subtitle">Suas encomendas, sempre organizadas.</p>
-        </div>
+    <!-- Botão de modo escuro, sempre visível (até na tela de login) -->
+    <button class="theme-toggle" id="btn-tema" title="Alternar modo escuro">🌙</button>
+
+    <!-- TELA DE LOGIN -->
+    <section id="section-login" class="login-screen">
+      <div class="login-selo">📬</div>
+      <h1 class="login-titulo">Carteiro Amigo</h1>
+      <p class="login-subtitulo">Suas encomendas, sempre organizadas.</p>
+
+      <div class="login-cartao">
+        <label for="input-nome" class="login-label">Como podemos te chamar?</label>
+        <input type="text" id="input-nome" class="login-input" placeholder="Digite seu nome" autocomplete="off" maxlength="30" />
+        <p id="login-erro" class="login-erro escondido">Digite um nome para continuar.</p>
+        <button id="btn-entrar" class="btn-primario">Entrar</button>
       </div>
-      <button class="bell-btn" id="btn-bell-home" title="Notificações">
-        🔔
-        <span class="badge" id="badge-notif">0</span>
-      </button>
-    </header>
+    </section>
 
-    <!-- Conteúdo principal: cada <section> é uma "tela" do app -->
-    <main id="main-content">
+    <!-- APP PRINCIPAL (só aparece depois do login) -->
+    <div id="app-shell">
 
-      <!-- TELA 1: INÍCIO -->
-      <section id="section-inicio" class="section active">
-        <p class="saudacao">Olá, Maria! 👋</p>
-        <p class="bemvindo">Bem-vinda ao <strong>Carteiro Amigo</strong></p>
-
-        <div class="resumo-card" id="resumo-disponivel"></div>
-
-        <div class="home-cards">
-          <button class="home-card cor-azul" data-target="encomendas">
-            <span class="home-card-icone">📦</span>
-            <span class="home-card-titulo">Minhas Encomendas</span>
-            <span class="home-card-desc">Veja suas encomendas</span>
-          </button>
-
-          <button class="home-card cor-clara" data-target="notificacoes">
-            <span class="home-card-icone">🔔</span>
-            <span class="home-card-titulo">Notificações</span>
-            <span class="home-card-desc">Avisos e atualizações</span>
-          </button>
-
-          <button class="home-card cor-verde" data-target="conta">
-            <span class="home-card-icone">💬</span>
-            <span class="home-card-titulo">Fale Conosco</span>
-            <span class="home-card-desc">Tire dúvidas ou envie mensagens</span>
-          </button>
-        </div>
-      </section>
-
-      <!-- TELA 2: LISTA DE ENCOMENDAS -->
-      <section id="section-encomendas" class="section">
-        <h2>Minhas Encomendas</h2>
-
-        <div class="tabs">
-          <button class="tab-btn active" data-filtro="todas">Todas</button>
-          <button class="tab-btn" data-filtro="disponivel">Disponíveis</button>
-          <button class="tab-btn" data-filtro="retirada">Retiradas</button>
-        </div>
-
-        <div id="lista-encomendas" class="lista-encomendas"></div>
-      </section>
-
-      <!-- TELA 3: DETALHES DE UMA ENCOMENDA -->
-      <section id="section-detalhes" class="section">
-        <button class="btn-voltar" id="btn-voltar-detalhes">← Voltar</button>
-        <div id="detalhe-conteudo"></div>
-      </section>
-
-      <!-- TELA 4: NOTIFICAÇÕES -->
-      <section id="section-notificacoes" class="section">
-        <h2>Notificações</h2>
-        <div id="lista-notificacoes" class="lista-notificacoes"></div>
-      </section>
-
-      <!-- TELA 5: CONTA / FALE CONOSCO -->
-      <section id="section-conta" class="section">
-        <h2>Minha Conta</h2>
-
-        <div class="conta-perfil">
-          <div class="conta-avatar">👩</div>
+      <!-- Cabeçalho com o nome do site -->
+      <header class="app-header">
+        <div class="logo-row">
+          <div class="app-icon">📬</div>
           <div>
-            <p class="conta-nome">Maria Silva</p>
-            <p class="conta-info">Apto 42 - Bloco B</p>
+            <h1>Carteiro Amigo</h1>
+            <p class="subtitle">Suas encomendas, sempre organizadas.</p>
           </div>
         </div>
+        <button class="bell-btn" id="btn-bell-home" title="Notificações">
+          🔔
+          <span class="badge" id="badge-notif">0</span>
+        </button>
+      </header>
 
-        <h3>💬 Fale Conosco</h3>
-        <p class="fale-conosco-texto">
-          Envie uma mensagem para o responsável pela portaria/condomínio.
-        </p>
+      <!-- Conteúdo principal: cada <section> é uma "tela" do app -->
+      <main id="main-content">
 
-        <textarea id="mensagem-texto" rows="5" placeholder="Escreva sua mensagem aqui..."></textarea>
-        <button id="btn-enviar-mensagem" class="btn-primario">Enviar mensagem</button>
+        <!-- TELA 1: INÍCIO -->
+        <section id="section-inicio" class="section active">
+          <p class="saudacao">Olá, <span id="nome-usuario">visitante</span>! 👋</p>
+          <p class="bemvindo">Bem-vinda ao <strong>Carteiro Amigo</strong></p>
 
-        <p id="msg-sucesso" class="msg-sucesso escondido">✅ Mensagem enviada com sucesso!</p>
-      </section>
+          <div class="resumo-card" id="resumo-disponivel"></div>
 
-    </main>
+          <div class="home-cards">
+            <button class="home-card cor-azul" data-target="encomendas">
+              <span class="home-card-icone">📦</span>
+              <span class="home-card-titulo">Minhas Encomendas</span>
+              <span class="home-card-desc">Veja suas encomendas</span>
+            </button>
 
-    <!-- Barra de navegação inferior, estilo aplicativo -->
-    <nav class="bottom-nav">
-      <button class="nav-btn active" data-target="inicio">
-        <span class="nav-icone">🏠</span>
-        <span class="nav-texto">Início</span>
-      </button>
-      <button class="nav-btn" data-target="encomendas">
-        <span class="nav-icone">📦</span>
-        <span class="nav-texto">Encomendas</span>
-      </button>
-      <button class="nav-btn" data-target="notificacoes">
-        <span class="nav-icone">🔔</span>
-        <span class="nav-texto">Notificações</span>
-      </button>
-      <button class="nav-btn" data-target="conta">
-        <span class="nav-icone">👤</span>
-        <span class="nav-texto">Conta</span>
-      </button>
-    </nav>
+            <button class="home-card cor-clara" data-target="notificacoes">
+              <span class="home-card-icone">🔔</span>
+              <span class="home-card-titulo">Notificações</span>
+              <span class="home-card-desc">Avisos e atualizações</span>
+            </button>
+
+            <button class="home-card cor-verde" data-target="conta">
+              <span class="home-card-icone">💬</span>
+              <span class="home-card-titulo">Fale Conosco</span>
+              <span class="home-card-desc">Tire dúvidas ou envie mensagens</span>
+            </button>
+          </div>
+        </section>
+
+        <!-- TELA 2: LISTA DE ENCOMENDAS -->
+        <section id="section-encomendas" class="section">
+          <h2>Minhas Encomendas</h2>
+
+          <div class="tabs">
+            <button class="tab-btn active" data-filtro="todas">Todas</button>
+            <button class="tab-btn" data-filtro="disponivel">Disponíveis</button>
+            <button class="tab-btn" data-filtro="retirada">Retiradas</button>
+          </div>
+
+          <div id="lista-encomendas" class="lista-encomendas"></div>
+        </section>
+
+        <!-- TELA 3: DETALHES DE UMA ENCOMENDA -->
+        <section id="section-detalhes" class="section">
+          <button class="btn-voltar" id="btn-voltar-detalhes">← Voltar</button>
+          <div id="detalhe-conteudo"></div>
+        </section>
+
+        <!-- TELA 4: NOTIFICAÇÕES -->
+        <section id="section-notificacoes" class="section">
+          <h2>Notificações</h2>
+          <div id="lista-notificacoes" class="lista-notificacoes"></div>
+        </section>
+
+        <!-- TELA 5: CONTA / FALE CONOSCO -->
+        <section id="section-conta" class="section">
+          <h2>Minha Conta</h2>
+
+          <div class="conta-perfil">
+            <div class="conta-avatar">👤</div>
+            <div>
+              <p class="conta-nome" id="conta-nome">visitante</p>
+              <p class="conta-info">Apto 42 - Bloco B</p>
+            </div>
+          </div>
+
+          <button id="btn-trocar-nome" class="btn-secundario">Trocar nome</button>
+
+          <h3>💬 Fale Conosco</h3>
+          <p class="fale-conosco-texto">
+            Envie uma mensagem para o responsável pela portaria/condomínio.
+          </p>
+
+          <textarea id="mensagem-texto" rows="5" placeholder="Escreva sua mensagem aqui..."></textarea>
+          <button id="btn-enviar-mensagem" class="btn-primario">Enviar mensagem</button>
+
+          <p id="msg-sucesso" class="msg-sucesso escondido">✅ Mensagem enviada com sucesso!</p>
+        </section>
+
+      </main>
+
+      <!-- Barra de navegação inferior, estilo aplicativo -->
+      <nav class="bottom-nav">
+        <button class="nav-btn active" data-target="inicio">
+          <span class="nav-icone">🏠</span>
+          <span class="nav-texto">Início</span>
+        </button>
+        <button class="nav-btn" data-target="encomendas">
+          <span class="nav-icone">📦</span>
+          <span class="nav-texto">Encomendas</span>
+        </button>
+        <button class="nav-btn" data-target="notificacoes">
+          <span class="nav-icone">🔔</span>
+          <span class="nav-texto">Notificações</span>
+        </button>
+        <button class="nav-btn" data-target="conta">
+          <span class="nav-icone">👤</span>
+          <span class="nav-texto">Conta</span>
+        </button>
+      </nav>
+
+    </div>
 
   </div>
 
   <script src="script.js"></script>
 </body>
 </html>
+
 
