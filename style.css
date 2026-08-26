@@ -1,22 +1,25 @@
 /* ==========================================================
    CARTEIRO AMIGO - ESTILOS GERAIS
-   Cores principais: azul escuro, azul, branco, cinza claro e verde
+   Identidade visual: "selo postal" — papel creme, azul-marinho
+   de carteiro, vermelho de carimbo e cartões com borda picotada
+   como um selo de verdade.
    ========================================================== */
 
 :root {
-  --azul-escuro: #16225c;
-  --azul: #2f6fed;
-  --azul-claro: #e4edfc;
+  --azul-marinho: #16204a;
+  --azul-carteiro: #2451c4;
+  --azul-claro: #e7edfb;
+  --creme: #faf6ee;
   --branco: #ffffff;
-  --cinza-claro: #f3f4f7;
-  --cinza-medio: #8a94a6;
-  --cinza-borda: #e3e5ea;
-  --verde: #22c55e;
-  --verde-claro: #e3f9ec;
-  --amarelo: #f59e0b;
-  --amarelo-claro: #fef3e0;
-  --vermelho: #ef4444;
-  --sombra: 0 8px 20px rgba(22, 34, 92, 0.08);
+  --cinza-medio: #8b8778;
+  --cinza-borda: #e6e0d2;
+  --verde: #2f9e64;
+  --verde-claro: #e2f5e9;
+  --amarelo: #c8811f;
+  --amarelo-claro: #faf0dc;
+  --vermelho-selo: #c1443c;
+  --sombra: 0 10px 24px rgba(22, 32, 74, 0.09);
+  --raio: 18px;
 }
 
 * {
@@ -25,9 +28,13 @@
 
 body {
   margin: 0;
-  font-family: "Segoe UI", Roboto, Arial, sans-serif;
-  background: var(--cinza-claro);
-  color: var(--azul-escuro);
+  font-family: "Inter", "Segoe UI", Roboto, Arial, sans-serif;
+  background: var(--creme);
+  color: var(--azul-marinho);
+}
+
+h1, h2, h3 {
+  font-family: "Fraunces", Georgia, serif;
 }
 
 /* ==========================================================
@@ -38,37 +45,38 @@ body {
   max-width: 480px;
   margin: 0 auto;
   min-height: 100vh;
-  background: var(--branco);
+  background: var(--creme);
   display: flex;
   flex-direction: column;
   box-shadow: var(--sombra);
   position: relative;
 }
 
-/* Em telas grandes, deixa o "app" com cara de cartão centralizado */
 @media (min-width: 600px) {
   body {
-    padding: 24px 0;
+    padding: 28px 0;
   }
   .app-container {
-    min-height: calc(100vh - 48px);
-    border-radius: 24px;
+    min-height: calc(100vh - 56px);
+    border-radius: 26px;
     overflow: hidden;
   }
 }
 
 /* ==========================================================
-   CABEÇALHO
+   CABEÇALHO — recorte de aba de envelope na base
    ========================================================== */
 
 .app-header {
-  background: var(--azul-escuro);
+  background: var(--azul-marinho);
   color: var(--branco);
-  padding: 20px 20px;
+  padding: 22px 20px 30px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
+  position: relative;
+  clip-path: polygon(0 0, 100% 0, 100% 82%, 50% 100%, 0 82%);
 }
 
 .logo-row {
@@ -78,27 +86,30 @@ body {
 }
 
 .app-icon {
-  width: 48px;
-  height: 48px;
-  min-width: 48px;
-  background: var(--branco);
-  border-radius: 14px;
+  width: 46px;
+  height: 46px;
+  min-width: 46px;
+  background: var(--creme);
+  border-radius: 13px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 26px;
+  font-size: 24px;
+  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.15);
 }
 
 .app-header h1 {
   margin: 0;
-  font-size: 1.25rem;
-  letter-spacing: 0.5px;
+  font-size: 1.28rem;
+  font-weight: 600;
+  letter-spacing: 0.2px;
 }
 
 .subtitle {
-  margin: 2px 0 0;
-  font-size: 0.78rem;
-  color: #c3cdf2;
+  margin: 3px 0 0;
+  font-size: 0.76rem;
+  color: #aebbe8;
+  font-weight: 500;
 }
 
 .bell-btn {
@@ -106,28 +117,34 @@ body {
   background: rgba(255, 255, 255, 0.12);
   border: none;
   color: var(--branco);
-  font-size: 1.1rem;
-  width: 42px;
-  height: 42px;
-  border-radius: 12px;
+  font-size: 1.05rem;
+  width: 40px;
+  height: 40px;
+  border-radius: 11px;
   cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.bell-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
 }
 
 .badge {
   position: absolute;
   top: -4px;
   right: -4px;
-  background: var(--vermelho);
+  background: var(--vermelho-selo);
   color: var(--branco);
-  font-size: 0.65rem;
-  font-weight: bold;
-  min-width: 18px;
-  height: 18px;
+  font-size: 0.63rem;
+  font-weight: 700;
+  min-width: 17px;
+  height: 17px;
   border-radius: 999px;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 0 4px;
+  border: 2px solid var(--azul-marinho);
 }
 
 .badge.escondido {
@@ -140,13 +157,13 @@ body {
 
 #main-content {
   flex: 1;
-  padding: 20px;
-  padding-bottom: 100px; /* espaço para a barra inferior não cobrir o conteúdo */
+  padding: 8px 20px 20px;
+  padding-bottom: 100px;
 }
 
 .section {
   display: none;
-  animation: aparecer 0.2s ease-in;
+  animation: aparecer 0.25s ease-out;
 }
 
 .section.active {
@@ -154,20 +171,22 @@ body {
 }
 
 @keyframes aparecer {
-  from { opacity: 0; transform: translateY(6px); }
+  from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
 h2 {
-  color: var(--azul-escuro);
-  font-size: 1.15rem;
+  color: var(--azul-marinho);
+  font-size: 1.2rem;
+  font-weight: 600;
   margin: 0 0 14px;
 }
 
 h3 {
-  color: var(--azul-escuro);
-  font-size: 1rem;
-  margin: 24px 0 8px;
+  color: var(--azul-marinho);
+  font-size: 1.02rem;
+  font-weight: 600;
+  margin: 26px 0 8px;
 }
 
 /* ==========================================================
@@ -175,28 +194,31 @@ h3 {
    ========================================================== */
 
 .saudacao {
-  font-size: 1.3rem;
-  font-weight: bold;
-  margin: 0 0 4px;
+  font-family: "Fraunces", Georgia, serif;
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin: 18px 0 2px;
 }
 
 .bemvindo {
   color: var(--cinza-medio);
   margin: 0 0 18px;
+  font-size: 0.92rem;
 }
 
 .resumo-card {
   background: var(--verde-claro);
-  border: 1px solid #bdf0d1;
-  color: #146c3a;
+  border: 1px solid #c4e6d2;
+  color: #1c6b41;
   padding: 14px 16px;
-  border-radius: 16px;
+  border-radius: var(--raio);
   font-weight: 600;
-  margin-bottom: 20px;
+  font-size: 0.92rem;
+  margin-bottom: 22px;
 }
 
 .resumo-card.sem-encomendas {
-  background: var(--cinza-claro);
+  background: var(--branco);
   border-color: var(--cinza-borda);
   color: var(--cinza-medio);
 }
@@ -209,7 +231,7 @@ h3 {
 
 .home-card {
   border: none;
-  border-radius: 18px;
+  border-radius: var(--raio);
   padding: 18px;
   text-align: left;
   display: grid;
@@ -219,36 +241,46 @@ h3 {
   cursor: pointer;
   box-shadow: var(--sombra);
   font-family: inherit;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.home-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 26px rgba(22, 32, 74, 0.13);
+}
+
+.home-card:active {
+  transform: translateY(0);
 }
 
 .home-card-icone {
-  font-size: 1.6rem;
+  font-size: 1.55rem;
   grid-row: span 2;
 }
 
 .home-card-titulo {
   font-weight: 700;
-  font-size: 1.02rem;
+  font-size: 1rem;
 }
 
 .home-card-desc {
-  font-size: 0.82rem;
+  font-size: 0.81rem;
   opacity: 0.85;
 }
 
 .home-card.cor-azul {
-  background: var(--azul-escuro);
+  background: var(--azul-marinho);
   color: var(--branco);
 }
 
 .home-card.cor-clara {
   background: var(--azul-claro);
-  color: var(--azul-escuro);
+  color: var(--azul-marinho);
 }
 
 .home-card.cor-verde {
   background: var(--verde-claro);
-  color: #146c3a;
+  color: #1c6b41;
 }
 
 /* ==========================================================
@@ -263,18 +295,20 @@ h3 {
 
 .tab-btn {
   flex: 1;
-  padding: 8px 4px;
+  padding: 9px 4px;
   border-radius: 10px;
   border: 1px solid var(--cinza-borda);
   background: var(--branco);
   color: var(--cinza-medio);
-  font-size: 0.85rem;
+  font-size: 0.84rem;
+  font-weight: 500;
   cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
 }
 
 .tab-btn.active {
-  background: var(--azul);
-  border-color: var(--azul);
+  background: var(--azul-carteiro);
+  border-color: var(--azul-carteiro);
   color: var(--branco);
   font-weight: 600;
 }
@@ -283,45 +317,54 @@ h3 {
 .lista-notificacoes {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 16px;
 }
 
-/* Cartão de cada encomenda */
+/* Cartão de cada encomenda — topo picotado, como um selo destacável */
 .encomenda-card {
   background: var(--branco);
   border: 1px solid var(--cinza-borda);
-  border-left: 5px solid var(--cinza-medio);
-  border-radius: 16px;
-  padding: 14px 16px;
+  border-top: none;
+  border-radius: 0 0 16px 16px;
+  padding: 18px 16px 14px;
   box-shadow: var(--sombra);
+  position: relative;
 }
 
-.encomenda-card.status-disponivel {
-  border-left-color: var(--verde);
+.encomenda-card::before {
+  content: "";
+  position: absolute;
+  top: -1px;
+  left: 0;
+  right: 0;
+  height: 9px;
+  background:
+    radial-gradient(circle, var(--creme) 3.4px, transparent 3.6px) top / 14px 14px repeat-x,
+    var(--branco);
+  border-top: 4px solid var(--cinza-medio);
+  border-radius: 16px 16px 0 0;
 }
 
-.encomenda-card.status-aguardando {
-  border-left-color: var(--amarelo);
-}
-
-.encomenda-card.status-retirada {
-  border-left-color: var(--cinza-medio);
-  opacity: 0.85;
-}
+.encomenda-card.status-disponivel::before { border-top-color: var(--verde); }
+.encomenda-card.status-aguardando::before { border-top-color: var(--amarelo); }
+.encomenda-card.status-retirada::before { border-top-color: var(--cinza-medio); }
+.encomenda-card.status-retirada { opacity: 0.82; }
 
 .encomenda-topo {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
+  margin-top: 4px;
 }
 
 .encomenda-titulo {
   font-weight: 700;
+  font-size: 0.95rem;
 }
 
 .status-tag {
-  font-size: 0.72rem;
+  font-size: 0.71rem;
   font-weight: 700;
   padding: 4px 10px;
   border-radius: 999px;
@@ -330,40 +373,41 @@ h3 {
 
 .status-tag.status-disponivel {
   background: var(--verde-claro);
-  color: #146c3a;
+  color: #1c6b41;
 }
 
 .status-tag.status-aguardando {
   background: var(--amarelo-claro);
-  color: #92610a;
+  color: #8a5814;
 }
 
 .status-tag.status-retirada {
-  background: var(--cinza-claro);
+  background: var(--creme);
   color: var(--cinza-medio);
 }
 
 .encomenda-info {
   font-size: 0.85rem;
   color: var(--cinza-medio);
-  margin: 2px 0;
+  margin: 3px 0;
 }
 
 .btn-detalhes {
   margin-top: 10px;
   background: none;
   border: none;
-  color: var(--azul);
+  color: var(--azul-carteiro);
   font-weight: 700;
   cursor: pointer;
   padding: 0;
-  font-size: 0.88rem;
+  font-size: 0.87rem;
 }
 
 .vazio {
   text-align: center;
   color: var(--cinza-medio);
-  padding: 30px 10px;
+  padding: 34px 10px;
+  font-size: 0.9rem;
 }
 
 /* ==========================================================
@@ -373,42 +417,50 @@ h3 {
 .btn-voltar {
   background: none;
   border: none;
-  color: var(--azul);
+  color: var(--azul-carteiro);
   font-weight: 600;
-  font-size: 0.95rem;
+  font-size: 0.94rem;
   cursor: pointer;
   padding: 0;
-  margin-bottom: 16px;
+  margin: 14px 0 16px;
 }
 
 .detalhe-caixa {
   background: var(--branco);
   border: 1px solid var(--cinza-borda);
-  border-radius: 18px;
-  padding: 20px;
+  border-radius: 20px;
+  padding: 22px 20px;
   box-shadow: var(--sombra);
 }
 
+/* Selo/carimbo circular com borda tracejada, como um postmark real */
 .detalhe-icone-grande {
   text-align: center;
-  font-size: 3rem;
-  margin-bottom: 6px;
+  font-size: 2.1rem;
+  width: 74px;
+  height: 74px;
+  line-height: 74px;
+  margin: 0 auto 12px;
+  border: 2px dashed var(--cinza-borda);
+  border-radius: 50%;
+  background: var(--creme);
 }
 
 .detalhe-status-texto {
   text-align: center;
   font-weight: 700;
   font-size: 1.05rem;
-  margin-bottom: 18px;
+  margin-bottom: 20px;
+  font-family: "Fraunces", Georgia, serif;
 }
 
 .detalhe-linha {
   display: flex;
   justify-content: space-between;
   gap: 10px;
-  padding: 10px 0;
-  border-bottom: 1px solid var(--cinza-borda);
-  font-size: 0.9rem;
+  padding: 11px 0;
+  border-bottom: 1px dashed var(--cinza-borda);
+  font-size: 0.89rem;
 }
 
 .detalhe-linha:last-of-type {
@@ -426,16 +478,16 @@ h3 {
 
 .aviso-documento {
   background: var(--azul-claro);
-  color: var(--azul-escuro);
+  color: var(--azul-marinho);
   border-radius: 12px;
   padding: 12px 14px;
   font-size: 0.85rem;
-  margin-top: 16px;
+  margin-top: 18px;
 }
 
 .btn-primario {
   width: 100%;
-  background: var(--azul);
+  background: var(--azul-carteiro);
   color: var(--branco);
   border: none;
   border-radius: 14px;
@@ -444,6 +496,15 @@ h3 {
   font-weight: 700;
   cursor: pointer;
   margin-top: 16px;
+  transition: filter 0.15s ease, transform 0.15s ease;
+}
+
+.btn-primario:hover:not(:disabled) {
+  filter: brightness(1.08);
+}
+
+.btn-primario:active:not(:disabled) {
+  transform: scale(0.99);
 }
 
 .btn-primario.verde {
@@ -451,7 +512,8 @@ h3 {
 }
 
 .btn-primario:disabled {
-  background: var(--cinza-medio);
+  background: var(--cinza-borda);
+  color: var(--cinza-medio);
   cursor: default;
 }
 
@@ -465,17 +527,18 @@ h3 {
   padding: 14px 16px;
   font-size: 0.88rem;
   box-shadow: var(--sombra);
+  border-left: 4px solid var(--azul-carteiro);
 }
 
 .notificacao-titulo {
   font-weight: 700;
   margin-bottom: 4px;
-  color: var(--azul-escuro);
+  color: var(--azul-marinho);
 }
 
 .notificacao-info {
-  color: var(--azul-escuro);
-  opacity: 0.8;
+  color: var(--azul-marinho);
+  opacity: 0.75;
   margin: 2px 0;
 }
 
@@ -487,21 +550,23 @@ h3 {
   display: flex;
   align-items: center;
   gap: 14px;
-  background: var(--cinza-claro);
+  background: var(--branco);
+  border: 1px solid var(--cinza-borda);
   border-radius: 16px;
   padding: 16px;
-  margin-bottom: 8px;
+  margin: 4px 0 8px;
+  box-shadow: var(--sombra);
 }
 
 .conta-avatar {
-  width: 54px;
-  height: 54px;
+  width: 52px;
+  height: 52px;
   border-radius: 50%;
   background: var(--azul-claro);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.6rem;
+  font-size: 1.55rem;
 }
 
 .conta-nome {
@@ -529,11 +594,17 @@ h3 {
   font-family: inherit;
   font-size: 0.92rem;
   resize: vertical;
+  background: var(--branco);
+}
+
+#mensagem-texto:focus {
+  outline: 2px solid var(--azul-carteiro);
+  outline-offset: 1px;
 }
 
 .msg-sucesso {
   background: var(--verde-claro);
-  color: #146c3a;
+  color: #1c6b41;
   border-radius: 12px;
   padding: 12px 14px;
   margin-top: 14px;
@@ -565,22 +636,31 @@ h3 {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2px;
+  gap: 3px;
   padding: 6px 0;
   color: var(--cinza-medio);
   cursor: pointer;
   font-family: inherit;
+  transition: color 0.15s ease;
 }
 
 .nav-icone {
-  font-size: 1.25rem;
+  font-size: 1.22rem;
 }
 
 .nav-texto {
-  font-size: 0.68rem;
+  font-size: 0.67rem;
   font-weight: 600;
 }
 
 .nav-btn.active {
-  color: var(--azul);
+  color: var(--azul-carteiro);
+}
+
+/* Respeita quem prefere menos movimento na tela */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
 }
