@@ -1,388 +1,667 @@
 /* ==========================================================
-   CARTEIRO AMIGO - SCRIPT PRINCIPAL
-   Todo o "banco de dados" fica aqui mesmo, em uma lista (array)
-   de objetos JavaScript. Não usamos backend nem banco de dados.
+   CARTEIRO AMIGO - ESTILOS GERAIS
+   Identidade visual: "selo postal" — papel creme, azul-marinho
+   de carteiro, vermelho de carimbo e cartões com borda picotada
+   como um selo de verdade.
    ========================================================== */
 
-// Lista de encomendas fictícias.
-// status pode ser: "aguardando", "disponivel" ou "retirada"
-let encomendas = [
-  {
-    id: "001",
-    destinatario: "Maria Silva",
-    chegada: "25/08/2026 às 14:30",
-    local: "Central de entregas",
-    horario: "8h às 18h",
-    status: "disponivel",
-    retiradaEm: null
-  },
-  {
-    id: "002",
-    destinatario: "Maria Silva",
-    chegada: "27/08/2026 às 09:00",
-    local: "Recepção do condomínio",
-    horario: "9h às 19h",
-    status: "aguardando",
-    retiradaEm: null
-  },
-  {
-    id: "003",
-    destinatario: "Maria Silva",
-    chegada: "20/08/2026 às 11:00",
-    local: "Central de entregas",
-    horario: "8h às 18h",
-    status: "retirada",
-    retiradaEm: "21/08/2026 às 10:15"
-  }
-];
-
-// Notificações fictícias mostradas na tela de Notificações
-let notificacoes = [
-  {
-    titulo: "🔔 Sua encomenda #001 chegou!",
-    local: "Central de entregas",
-    horario: "Disponível para retirada das 8h às 18h."
-  },
-  {
-    titulo: "🔔 Sua encomenda #002 está a caminho",
-    local: "Recepção do condomínio",
-    horario: "Previsão de chegada: 27/08/2026."
-  },
-  {
-    titulo: "✔️ Encomenda #003 retirada com sucesso",
-    local: "Central de entregas",
-    horario: "Retirada em 21/08/2026 às 10:15."
-  }
-];
-
-// Guarda o id da encomenda que está sendo exibida na tela de detalhes
-let idEncomendaSelecionada = null;
-
-// Guarda o filtro atual da lista de encomendas
-let filtroAtual = "todas";
-
-/* ==========================================================
-   TEXTOS AUXILIARES PARA CADA STATUS
-   ========================================================== */
-
-const textoStatus = {
-  disponivel: "Disponível para retirada",
-  aguardando: "Aguardando chegada",
-  retirada: "Retirada"
-};
-
-const iconeStatus = {
-  disponivel: "🟢",
-  aguardando: "🟡",
-  retirada: "⚪"
-};
-
-/* ==========================================================
-   NAVEGAÇÃO ENTRE TELAS
-   ========================================================== */
-
-// Troca a tela visível e destaca o botão certo na barra inferior
-function mostrarTela(nomeTela) {
-  document.querySelectorAll(".section").forEach(function (secao) {
-    secao.classList.remove("active");
-  });
-  document.getElementById("section-" + nomeTela).classList.add("active");
-
-  document.querySelectorAll(".nav-btn").forEach(function (botao) {
-    botao.classList.toggle("active", botao.dataset.target === nomeTela);
-  });
-
-  // Sempre que a tela mudar, rola para o topo do conteúdo
-  document.getElementById("main-content").scrollTop = 0;
-  window.scrollTo(0, 0);
+:root {
+  --azul-marinho: #16204a;
+  --azul-carteiro: #2451c4;
+  --azul-claro: #e7edfb;
+  --creme: #faf6ee;
+  --branco: #ffffff;
+  --cinza-medio: #8b8778;
+  --cinza-borda: #e6e0d2;
+  --verde: #2f9e64;
+  --verde-claro: #e2f5e9;
+  --amarelo: #c8811f;
+  --amarelo-claro: #faf0dc;
+  --vermelho-selo: #c1443c;
+  --sombra: 0 10px 24px rgba(22, 32, 74, 0.09);
+  --raio: 18px;
 }
 
-// Botões da barra inferior
-document.querySelectorAll(".nav-btn").forEach(function (botao) {
-  botao.addEventListener("click", function () {
-    mostrarTela(botao.dataset.target);
-    if (botao.dataset.target === "encomendas") {
-      renderizarEncomendas();
-    }
-    if (botao.dataset.target === "notificacoes") {
-      renderizarNotificacoes();
-    }
-  });
-});
+* {
+  box-sizing: border-box;
+}
 
-// Cards clicáveis da tela inicial (também usam data-target)
-document.querySelectorAll(".home-card").forEach(function (card) {
-  card.addEventListener("click", function () {
-    mostrarTela(card.dataset.target);
-    if (card.dataset.target === "encomendas") {
-      renderizarEncomendas();
-    }
-    if (card.dataset.target === "notificacoes") {
-      renderizarNotificacoes();
-    }
-  });
-});
+body {
+  margin: 0;
+  font-family: "Inter", "Segoe UI", Roboto, Arial, sans-serif;
+  background: var(--creme);
+  color: var(--azul-marinho);
+}
 
-// Sino de notificações no cabeçalho
-document.getElementById("btn-bell-home").addEventListener("click", function () {
-  mostrarTela("notificacoes");
-  renderizarNotificacoes();
-});
-
-// Botão de voltar da tela de detalhes
-document.getElementById("btn-voltar-detalhes").addEventListener("click", function () {
-  mostrarTela("encomendas");
-});
-
-/* ==========================================================
-   TELA INICIAL: resumo de encomendas disponíveis
-   ========================================================== */
-
-function renderizarResumoInicio() {
-  const disponiveis = encomendas.filter(function (e) {
-    return e.status === "disponivel";
-  }).length;
-
-  const resumo = document.getElementById("resumo-disponivel");
-
-  if (disponiveis > 0) {
-    resumo.classList.remove("sem-encomendas");
-    resumo.textContent =
-      "📦 Você tem " +
-      disponiveis +
-      (disponiveis === 1 ? " encomenda disponível" : " encomendas disponíveis") +
-      " para retirada.";
-  } else {
-    resumo.classList.add("sem-encomendas");
-    resumo.textContent = "Nenhuma encomenda disponível para retirada no momento.";
-  }
-
-  // Atualiza o número vermelho no sino do cabeçalho
-  const badge = document.getElementById("badge-notif");
-  badge.textContent = disponiveis;
-  badge.classList.toggle("escondido", disponiveis === 0);
+h1, h2, h3 {
+  font-family: "Fraunces", Georgia, serif;
 }
 
 /* ==========================================================
-   TELA DE ENCOMENDAS (lista)
+   CONTAINER GERAL - simula a tela de um aplicativo de celular
    ========================================================== */
 
-// Botões de filtro (Todas / Disponíveis / Retiradas)
-document.querySelectorAll(".tab-btn").forEach(function (botao) {
-  botao.addEventListener("click", function () {
-    filtroAtual = botao.dataset.filtro;
+.app-container {
+  max-width: 480px;
+  margin: 0 auto;
+  min-height: 100vh;
+  background: var(--creme);
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--sombra);
+  position: relative;
+}
 
-    document.querySelectorAll(".tab-btn").forEach(function (b) {
-      b.classList.remove("active");
-    });
-    botao.classList.add("active");
-
-    renderizarEncomendas();
-  });
-});
-
-function renderizarEncomendas() {
-  const lista = document.getElementById("lista-encomendas");
-  lista.innerHTML = "";
-
-  let encomendasFiltradas = encomendas;
-  if (filtroAtual !== "todas") {
-    encomendasFiltradas = encomendas.filter(function (e) {
-      return e.status === filtroAtual;
-    });
+@media (min-width: 600px) {
+  body {
+    padding: 28px 0;
   }
-
-  if (encomendasFiltradas.length === 0) {
-    lista.innerHTML = '<p class="vazio">Nenhuma encomenda encontrada.</p>';
-    return;
+  .app-container {
+    min-height: calc(100vh - 56px);
+    border-radius: 26px;
+    overflow: hidden;
   }
-
-  encomendasFiltradas.forEach(function (encomenda) {
-    const card = document.createElement("div");
-    card.className = "encomenda-card status-" + encomenda.status;
-
-    card.innerHTML =
-      '<div class="encomenda-topo">' +
-        '<span class="encomenda-titulo">📦 Encomenda #' + encomenda.id + "</span>" +
-        '<span class="status-tag status-' + encomenda.status + '">' +
-          iconeStatus[encomenda.status] + " " + textoStatus[encomenda.status] +
-        "</span>" +
-      "</div>" +
-      '<p class="encomenda-info">📍 ' + encomenda.local + "</p>" +
-      '<p class="encomenda-info">📅 Chegada: ' + encomenda.chegada + "</p>" +
-      '<button class="btn-detalhes" data-id="' + encomenda.id + '">Ver detalhes →</button>';
-
-    lista.appendChild(card);
-  });
-
-  // Liga o evento de clique em cada botão "Ver detalhes" recém-criado
-  document.querySelectorAll(".btn-detalhes").forEach(function (botao) {
-    botao.addEventListener("click", function () {
-      abrirDetalhes(botao.dataset.id);
-    });
-  });
 }
 
 /* ==========================================================
-   TELA DE DETALHES DA ENCOMENDA
+   CABEÇALHO — recorte de aba de envelope na base
    ========================================================== */
 
-function buscarEncomendaPorId(id) {
-  return encomendas.find(function (e) {
-    return e.id === id;
-  });
+.app-header {
+  background: var(--azul-marinho);
+  color: var(--branco);
+  padding: 22px 20px 30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  position: relative;
+  clip-path: polygon(0 0, 100% 0, 100% 82%, 50% 100%, 0 82%);
 }
 
-function abrirDetalhes(id) {
-  idEncomendaSelecionada = id;
-  renderizarDetalhes();
-  mostrarTela("detalhes");
+.logo-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
-function renderizarDetalhes() {
-  const encomenda = buscarEncomendaPorId(idEncomendaSelecionada);
-  const container = document.getElementById("detalhe-conteudo");
-
-  if (!encomenda) {
-    container.innerHTML = '<p class="vazio">Encomenda não encontrada.</p>';
-    return;
-  }
-
-  const disponivel = encomenda.status === "disponivel";
-  const jaRetirada = encomenda.status === "retirada";
-
-  let iconeGrande = "📦";
-  let tituloStatus = textoStatus[encomenda.status];
-  if (jaRetirada) {
-    iconeGrande = "✔️";
-    tituloStatus = "Retirada com sucesso!";
-  } else if (disponivel) {
-    iconeGrande = "✅";
-    tituloStatus = "Encomenda disponível para retirada!";
-  } else {
-    iconeGrande = "⏳";
-    tituloStatus = "Aguardando chegada da encomenda";
-  }
-
-  let html =
-    '<div class="detalhe-caixa">' +
-      '<div class="detalhe-icone-grande">' + iconeGrande + "</div>" +
-      '<p class="detalhe-status-texto">' + tituloStatus + "</p>" +
-
-      '<div class="detalhe-linha"><span>Código</span><span>#' + encomenda.id + "</span></div>" +
-      '<div class="detalhe-linha"><span>👤 Destinatário</span><span>' + encomenda.destinatario + "</span></div>" +
-      '<div class="detalhe-linha"><span>📅 Chegada</span><span>' + encomenda.chegada + "</span></div>" +
-      '<div class="detalhe-linha"><span>📍 Local</span><span>' + encomenda.local + "</span></div>" +
-      '<div class="detalhe-linha"><span>🕒 Horário</span><span>' + encomenda.horario + "</span></div>" +
-      '<div class="detalhe-linha"><span>Status</span><span>' +
-        iconeStatus[encomenda.status] + " " + textoStatus[encomenda.status] +
-      "</span></div>";
-
-  if (jaRetirada) {
-    html +=
-      '<div class="detalhe-linha"><span>Retirada em</span><span>' + encomenda.retiradaEm + "</span></div>";
-  }
-
-  if (disponivel) {
-    html +=
-      '<div class="aviso-documento">📄 <strong>Importante:</strong> leve um documento com foto para retirar sua encomenda.</div>' +
-      '<button class="btn-primario verde" id="btn-confirmar-retirada">✅ Confirmar retirada</button>';
-  }
-
-  if (!disponivel && !jaRetirada) {
-    html += '<button class="btn-primario" disabled>⏳ Aguardando chegada</button>';
-  }
-
-  html += "</div>";
-
-  container.innerHTML = html;
-
-  // Liga o botão de confirmar retirada, se ele existir na tela
-  const botaoConfirmar = document.getElementById("btn-confirmar-retirada");
-  if (botaoConfirmar) {
-    botaoConfirmar.addEventListener("click", confirmarRetirada);
-  }
+.app-icon {
+  width: 46px;
+  height: 46px;
+  min-width: 46px;
+  background: var(--creme);
+  border-radius: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.15);
 }
 
-// Marca a encomenda selecionada como retirada e atualiza toda a interface
-function confirmarRetirada() {
-  const encomenda = buscarEncomendaPorId(idEncomendaSelecionada);
-  if (!encomenda) return;
+.app-header h1 {
+  margin: 0;
+  font-size: 1.28rem;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+}
 
-  const agora = new Date();
-  const dataFormatada = agora.toLocaleDateString("pt-BR");
-  const horaFormatada = agora.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
+.subtitle {
+  margin: 3px 0 0;
+  font-size: 0.76rem;
+  color: #aebbe8;
+  font-weight: 500;
+}
 
-  encomenda.status = "retirada";
-  encomenda.retiradaEm = dataFormatada + " às " + horaFormatada;
+.bell-btn {
+  position: relative;
+  background: rgba(255, 255, 255, 0.12);
+  border: none;
+  color: var(--branco);
+  font-size: 1.05rem;
+  width: 40px;
+  height: 40px;
+  border-radius: 11px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
 
-  // Adiciona uma notificação nova sobre a retirada
-  notificacoes.unshift({
-    titulo: "✔️ Encomenda #" + encomenda.id + " retirada com sucesso",
-    local: encomenda.local,
-    horario: "Retirada em " + encomenda.retiradaEm + "."
-  });
+.bell-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
 
-  renderizarDetalhes();
-  renderizarEncomendas();
-  renderizarResumoInicio();
+.badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  background: var(--vermelho-selo);
+  color: var(--branco);
+  font-size: 0.63rem;
+  font-weight: 700;
+  min-width: 17px;
+  height: 17px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+  border: 2px solid var(--azul-marinho);
+}
+
+.badge.escondido {
+  display: none;
 }
 
 /* ==========================================================
-   TELA DE NOTIFICAÇÕES
+   CONTEÚDO PRINCIPAL / TELAS
    ========================================================== */
 
-function renderizarNotificacoes() {
-  const lista = document.getElementById("lista-notificacoes");
-  lista.innerHTML = "";
+#main-content {
+  flex: 1;
+  padding: 8px 20px 20px;
+  padding-bottom: 100px;
+}
 
-  if (notificacoes.length === 0) {
-    lista.innerHTML = '<p class="vazio">Nenhuma notificação por enquanto.</p>';
-    return;
-  }
+.section {
+  display: none;
+  animation: aparecer 0.25s ease-out;
+}
 
-  notificacoes.forEach(function (notificacao) {
-    const card = document.createElement("div");
-    card.className = "notificacao-card";
-    card.innerHTML =
-      '<p class="notificacao-titulo">' + notificacao.titulo + "</p>" +
-      '<p class="notificacao-info">📍 ' + notificacao.local + "</p>" +
-      '<p class="notificacao-info">🕒 ' + notificacao.horario + "</p>";
-    lista.appendChild(card);
-  });
+.section.active {
+  display: block;
+}
+
+@keyframes aparecer {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+h2 {
+  color: var(--azul-marinho);
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 0 0 14px;
+}
+
+h3 {
+  color: var(--azul-marinho);
+  font-size: 1.02rem;
+  font-weight: 600;
+  margin: 26px 0 8px;
 }
 
 /* ==========================================================
-   TELA FALE CONOSCO
+   TELA INÍCIO
    ========================================================== */
 
-document.getElementById("btn-enviar-mensagem").addEventListener("click", function () {
-  const campoMensagem = document.getElementById("mensagem-texto");
-  const mensagemSucesso = document.getElementById("msg-sucesso");
-
-  if (campoMensagem.value.trim() === "") {
-    return; // não faz nada se o campo estiver vazio
-  }
-
-  // Como é apenas um protótipo, não enviamos a mensagem de verdade
-  mensagemSucesso.classList.remove("escondido");
-  campoMensagem.value = "";
-
-  // Some com a mensagem de sucesso depois de alguns segundos
-  setTimeout(function () {
-    mensagemSucesso.classList.add("escondido");
-  }, 3000);
-});
-
-/* ==========================================================
-   INICIALIZAÇÃO DO SITE
-   ========================================================== */
-
-function iniciar() {
-  renderizarResumoInicio();
-  renderizarEncomendas();
-  renderizarNotificacoes();
-  mostrarTela("inicio");
+.saudacao {
+  font-family: "Fraunces", Georgia, serif;
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin: 18px 0 2px;
 }
 
-iniciar();
+.bemvindo {
+  color: var(--cinza-medio);
+  margin: 0 0 18px;
+  font-size: 0.92rem;
+}
+
+.resumo-card {
+  background: var(--verde-claro);
+  border: 1px solid #c4e6d2;
+  color: #1c6b41;
+  padding: 14px 16px;
+  border-radius: var(--raio);
+  font-weight: 600;
+  font-size: 0.92rem;
+  margin-bottom: 22px;
+}
+
+.resumo-card.sem-encomendas {
+  background: var(--branco);
+  border-color: var(--cinza-borda);
+  color: var(--cinza-medio);
+}
+
+.home-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.home-card {
+  border: none;
+  border-radius: var(--raio);
+  padding: 18px;
+  text-align: left;
+  display: grid;
+  grid-template-columns: 40px 1fr;
+  column-gap: 12px;
+  row-gap: 2px;
+  cursor: pointer;
+  box-shadow: var(--sombra);
+  font-family: inherit;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.home-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 26px rgba(22, 32, 74, 0.13);
+}
+
+.home-card:active {
+  transform: translateY(0);
+}
+
+.home-card-icone {
+  font-size: 1.55rem;
+  grid-row: span 2;
+}
+
+.home-card-titulo {
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.home-card-desc {
+  font-size: 0.81rem;
+  opacity: 0.85;
+}
+
+.home-card.cor-azul {
+  background: var(--azul-marinho);
+  color: var(--branco);
+}
+
+.home-card.cor-clara {
+  background: var(--azul-claro);
+  color: var(--azul-marinho);
+}
+
+.home-card.cor-verde {
+  background: var(--verde-claro);
+  color: #1c6b41;
+}
+
+/* ==========================================================
+   TELA ENCOMENDAS - abas de filtro
+   ========================================================== */
+
+.tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.tab-btn {
+  flex: 1;
+  padding: 9px 4px;
+  border-radius: 10px;
+  border: 1px solid var(--cinza-borda);
+  background: var(--branco);
+  color: var(--cinza-medio);
+  font-size: 0.84rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.tab-btn.active {
+  background: var(--azul-carteiro);
+  border-color: var(--azul-carteiro);
+  color: var(--branco);
+  font-weight: 600;
+}
+
+.lista-encomendas,
+.lista-notificacoes {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Cartão de cada encomenda — topo picotado, como um selo destacável */
+.encomenda-card {
+  background: var(--branco);
+  border: 1px solid var(--cinza-borda);
+  border-top: none;
+  border-radius: 0 0 16px 16px;
+  padding: 18px 16px 14px;
+  box-shadow: var(--sombra);
+  position: relative;
+}
+
+.encomenda-card::before {
+  content: "";
+  position: absolute;
+  top: -1px;
+  left: 0;
+  right: 0;
+  height: 9px;
+  background:
+    radial-gradient(circle, var(--creme) 3.4px, transparent 3.6px) top / 14px 14px repeat-x,
+    var(--branco);
+  border-top: 4px solid var(--cinza-medio);
+  border-radius: 16px 16px 0 0;
+}
+
+.encomenda-card.status-disponivel::before { border-top-color: var(--verde); }
+.encomenda-card.status-aguardando::before { border-top-color: var(--amarelo); }
+.encomenda-card.status-retirada::before { border-top-color: var(--cinza-medio); }
+.encomenda-card.status-retirada { opacity: 0.82; }
+
+.encomenda-topo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  margin-top: 4px;
+}
+
+.encomenda-titulo {
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.status-tag {
+  font-size: 0.71rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.status-tag.status-disponivel {
+  background: var(--verde-claro);
+  color: #1c6b41;
+}
+
+.status-tag.status-aguardando {
+  background: var(--amarelo-claro);
+  color: #8a5814;
+}
+
+.status-tag.status-retirada {
+  background: var(--creme);
+  color: var(--cinza-medio);
+}
+
+.encomenda-info {
+  font-size: 0.85rem;
+  color: var(--cinza-medio);
+  margin: 3px 0;
+}
+
+.btn-detalhes {
+  margin-top: 10px;
+  background: none;
+  border: none;
+  color: var(--azul-carteiro);
+  font-weight: 700;
+  cursor: pointer;
+  padding: 0;
+  font-size: 0.87rem;
+}
+
+.vazio {
+  text-align: center;
+  color: var(--cinza-medio);
+  padding: 34px 10px;
+  font-size: 0.9rem;
+}
+
+/* ==========================================================
+   TELA DETALHES
+   ========================================================== */
+
+.btn-voltar {
+  background: none;
+  border: none;
+  color: var(--azul-carteiro);
+  font-weight: 600;
+  font-size: 0.94rem;
+  cursor: pointer;
+  padding: 0;
+  margin: 14px 0 16px;
+}
+
+.detalhe-caixa {
+  background: var(--branco);
+  border: 1px solid var(--cinza-borda);
+  border-radius: 20px;
+  padding: 22px 20px;
+  box-shadow: var(--sombra);
+}
+
+/* Selo/carimbo circular com borda tracejada, como um postmark real */
+.detalhe-icone-grande {
+  text-align: center;
+  font-size: 2.1rem;
+  width: 74px;
+  height: 74px;
+  line-height: 74px;
+  margin: 0 auto 12px;
+  border: 2px dashed var(--cinza-borda);
+  border-radius: 50%;
+  background: var(--creme);
+}
+
+.detalhe-status-texto {
+  text-align: center;
+  font-weight: 700;
+  font-size: 1.05rem;
+  margin-bottom: 20px;
+  font-family: "Fraunces", Georgia, serif;
+}
+
+.detalhe-linha {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 11px 0;
+  border-bottom: 1px dashed var(--cinza-borda);
+  font-size: 0.89rem;
+}
+
+.detalhe-linha:last-of-type {
+  border-bottom: none;
+}
+
+.detalhe-linha span:first-child {
+  color: var(--cinza-medio);
+}
+
+.detalhe-linha span:last-child {
+  font-weight: 600;
+  text-align: right;
+}
+
+.aviso-documento {
+  background: var(--azul-claro);
+  color: var(--azul-marinho);
+  border-radius: 12px;
+  padding: 12px 14px;
+  font-size: 0.85rem;
+  margin-top: 18px;
+}
+
+.btn-primario {
+  width: 100%;
+  background: var(--azul-carteiro);
+  color: var(--branco);
+  border: none;
+  border-radius: 14px;
+  padding: 14px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 16px;
+  transition: filter 0.15s ease, transform 0.15s ease;
+}
+
+.btn-primario:hover:not(:disabled) {
+  filter: brightness(1.08);
+}
+
+.btn-primario:active:not(:disabled) {
+  transform: scale(0.99);
+}
+
+.btn-primario.verde {
+  background: var(--verde);
+}
+
+.btn-primario:disabled {
+  background: var(--cinza-borda);
+  color: var(--cinza-medio);
+  cursor: default;
+}
+
+/* ==========================================================
+   TELA NOTIFICAÇÕES
+   ========================================================== */
+
+.notificacao-card {
+  background: var(--azul-claro);
+  border-radius: 16px;
+  padding: 14px 16px;
+  font-size: 0.88rem;
+  box-shadow: var(--sombra);
+  border-left: 4px solid var(--azul-carteiro);
+}
+
+.notificacao-titulo {
+  font-weight: 700;
+  margin-bottom: 4px;
+  color: var(--azul-marinho);
+}
+
+.notificacao-info {
+  color: var(--azul-marinho);
+  opacity: 0.75;
+  margin: 2px 0;
+}
+
+/* ==========================================================
+   TELA CONTA / FALE CONOSCO
+   ========================================================== */
+
+.conta-perfil {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--branco);
+  border: 1px solid var(--cinza-borda);
+  border-radius: 16px;
+  padding: 16px;
+  margin: 4px 0 8px;
+  box-shadow: var(--sombra);
+}
+
+.conta-avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: var(--azul-claro);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.55rem;
+}
+
+.conta-nome {
+  margin: 0;
+  font-weight: 700;
+}
+
+.conta-info {
+  margin: 2px 0 0;
+  color: var(--cinza-medio);
+  font-size: 0.85rem;
+}
+
+.fale-conosco-texto {
+  color: var(--cinza-medio);
+  font-size: 0.88rem;
+  margin: 0 0 10px;
+}
+
+#mensagem-texto {
+  width: 100%;
+  border: 1px solid var(--cinza-borda);
+  border-radius: 14px;
+  padding: 12px;
+  font-family: inherit;
+  font-size: 0.92rem;
+  resize: vertical;
+  background: var(--branco);
+}
+
+#mensagem-texto:focus {
+  outline: 2px solid var(--azul-carteiro);
+  outline-offset: 1px;
+}
+
+.msg-sucesso {
+  background: var(--verde-claro);
+  color: #1c6b41;
+  border-radius: 12px;
+  padding: 12px 14px;
+  margin-top: 14px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.escondido {
+  display: none !important;
+}
+
+/* ==========================================================
+   BARRA DE NAVEGAÇÃO INFERIOR
+   ========================================================== */
+
+.bottom-nav {
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  background: var(--branco);
+  border-top: 1px solid var(--cinza-borda);
+  padding: 8px 4px;
+}
+
+.nav-btn {
+  flex: 1;
+  background: none;
+  border: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 6px 0;
+  color: var(--cinza-medio);
+  cursor: pointer;
+  font-family: inherit;
+  transition: color 0.15s ease;
+}
+
+.nav-icone {
+  font-size: 1.22rem;
+}
+
+.nav-texto {
+  font-size: 0.67rem;
+  font-weight: 600;
+}
+
+.nav-btn.active {
+  color: var(--azul-carteiro);
+}
+
+/* Respeita quem prefere menos movimento na tela */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
